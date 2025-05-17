@@ -3,27 +3,34 @@ import { useFormik } from "formik";
 import { SignUpSchema } from "../schemas/SignUp";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 import axios from "axios";
+import React, { useState } from "react";
 
 const Signup = () => {
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const submitdatabackend = async (values) => {
-    const response = await axios.post(
-      `${import.meta.env.VITE_BACKEND_URL}/user/register`,
-      values
-    );
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/user/register`,
+        values
+      );
 
-    toast.success("User create please login", {
-      position: "top-right",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: false,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-      transition: Bounce,
-    });
-    resetForm();
+      toast.success("User create please login", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
+      resetForm();
+    } finally {
+      setLoading(false);
+    }
   };
 
   const {
@@ -46,8 +53,15 @@ const Signup = () => {
   });
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-slate-900">
-       <button
+    <div className="flex flex-col items-center justify-center h-screen bg-slate-900 relative">
+      {/* Loading Spinner Overlay */}
+      {loading && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-lg bg-opacity-40">
+          <div className="w-20 h-20 border-4 border-blue-400 border-t-transparent rounded-full animate-spin"></div>
+        </div>
+      )}
+      {/* Back Button */}
+      <button
         className="absolute left-6 top-6 z-20 flex items-center gap-2 bg-slate-800 text-blue-400 border border-blue-400 px-4 py-2 rounded-lg font-bold shadow hover:bg-slate-700 hover:text-white transition-all duration-200"
         onClick={() => navigate(-1)}
       >

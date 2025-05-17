@@ -11,6 +11,7 @@ const TaskDashboard = () => {
     status: "Pending",
   });
   const [editingId, setEditingId] = useState(null);
+  const [loading, setLoading] = useState(false);
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -19,6 +20,7 @@ const TaskDashboard = () => {
   };
 
   const getallTasks = async () => {
+    setLoading(true);
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
@@ -33,6 +35,8 @@ const TaskDashboard = () => {
     } catch (error) {
       alert("Server Error");
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -42,6 +46,7 @@ const TaskDashboard = () => {
 
   // Create or update task
   const handleUpdate = async (id) => {
+    setLoading(true);
     try {
       const token = localStorage.getItem("token");
       if (form.status === "Completed") {
@@ -119,12 +124,14 @@ const TaskDashboard = () => {
     setEditingId(null);
 
     setForm({ title: "", description: "", status: "Pending" });
+    setLoading(false);
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (editingId) {
       return await handleUpdate(editingId);
     }
+    setLoading(true);
     try {
       const token = localStorage.getItem("token");
       const response = await axios.post(
@@ -159,6 +166,7 @@ const TaskDashboard = () => {
     }
 
     setForm({ title: "", description: "", status: "Pending" });
+    setLoading(false);
   };
 
   // Edit task
@@ -175,6 +183,7 @@ const TaskDashboard = () => {
   const handleDelete = async (id) => {
     let cnfrm = confirm("Are you sure you want to delete this task?");
     if (cnfrm) {
+      setLoading(true);
       try {
         const updatask = tasks.filter((task) => task._id !== id);
         setTasks(updatask);
@@ -209,14 +218,21 @@ const TaskDashboard = () => {
           transition: Bounce,
         });
       }
+      setLoading(false);
     }
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700 flex flex-col items-center py-10 relative overflow-x-hidden">
+      {/* Loading Spinner Overlay */}
+      {loading && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-lg bg-opacity-40">
+          <div className="w-20 h-20 border-4 border-blue-400 border-t-transparent rounded-full animate-spin"></div>
+        </div>
+      )}
       {/* Back Button */}
       <button
-        className="absolute left-6 top-6 z-20 flex items-center gap-2 bg-slate-800 text-blue-400 border border-blue-400 px-4 py-2 rounded-lg font-bold shadow hover:bg-slate-700 hover:text-white transition-all duration-200"
+        className="absolute cursor-pointer left-6 top-6 z-20 flex items-center gap-2 bg-slate-800 text-blue-400 border border-blue-400 px-4 py-2 rounded-lg font-bold shadow hover:bg-slate-700 hover:text-white transition-all duration-200"
         onClick={() => navigate(-1)}
       >
         <svg
@@ -302,7 +318,7 @@ const TaskDashboard = () => {
             <div className="flex gap-4 mt-2">
               <button
                 type="submit"
-                className="bg-gradient-to-r from-blue-500 to-blue-400 text-white px-6 py-2 rounded-lg font-bold shadow hover:from-blue-400 hover:to-blue-500 transition-all duration-200 text-lg border border-blue-400"
+                className="bg-gradient-to-r from-blue-500 to-blue-400 text-white px-6 py-2 rounded-lg font-bold shadow hover:from-blue-400 hover:to-blue-500 transition-all duration-200 text-lg border border-blue-400 cursor-pointer"
               >
                 {editingId ? "Update" : "Create"}
               </button>
@@ -313,7 +329,7 @@ const TaskDashboard = () => {
                     setEditingId(null);
                     setForm({ title: "", description: "", status: "Pending" });
                   }}
-                  className="px-6 py-2 rounded-lg bg-gray-300 hover:bg-gray-400 text-slate-900 font-bold border border-gray-400 transition-all duration-200 text-lg"
+                  className=" cursor-pointer px-6 py-2 rounded-lg bg-gray-300 hover:bg-gray-400 text-slate-900 font-bold border border-gray-400 transition-all duration-200 text-lg"
                 >
                   Cancel
                 </button>
@@ -338,13 +354,13 @@ const TaskDashboard = () => {
                     <div>
                       <button
                         onClick={() => handleEdit(task)}
-                        className="text-blue-400 hover:underline mr-4 font-semibold text-lg"
+                        className="text-blue-400 cursor-pointer hover:underline mr-4 font-semibold text-lg"
                       >
                         Edit
                       </button>
                       <button
                         onClick={() => handleDelete(task._id)}
-                        className="text-red-400 hover:underline font-semibold text-lg"
+                        className="text-red-400 cursor-pointer hover:underline font-semibold text-lg"
                       >
                         Delete
                       </button>

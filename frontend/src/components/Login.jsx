@@ -3,8 +3,10 @@ import { useFormik } from "formik";
 import { LoginSchema } from "../schemas/Login";
 import axios from "axios";
 import { Bounce, toast, ToastContainer } from "react-toastify";
+import React, { useState } from "react";
 
 const Login = ({ setloggedIn }) => {
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const {
     handleChange,
@@ -24,6 +26,7 @@ const Login = ({ setloggedIn }) => {
   });
 
   async function submitdata(values) {
+    setLoading(true);
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/user/login`,
@@ -62,10 +65,18 @@ const Login = ({ setloggedIn }) => {
       }
     } catch (error) {}
     resetForm();
+    setLoading(false);
   }
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-slate-900">
-       <button
+    <div className="flex flex-col items-center justify-center h-screen bg-slate-900 relative">
+      {/* Loading Spinner Overlay */}
+      {loading && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-lg bg-opacity-40">
+          <div className="w-20 h-20 border-4 border-blue-400 border-t-transparent rounded-full animate-spin"></div>
+        </div>
+      )}
+      {/* Back Button */}
+      <button
         className="absolute left-6 top-6 z-20 flex items-center gap-2 bg-slate-800 text-blue-400 border border-blue-400 px-4 py-2 rounded-lg font-bold shadow hover:bg-slate-700 hover:text-white transition-all duration-200"
         onClick={() => navigate(-1)}
       >
