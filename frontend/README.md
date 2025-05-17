@@ -35,7 +35,7 @@ This is the frontend for the **Task Manager** application, a full-stack project 
 ### 1. Clone the Repository
 
 ```powershell
-git clone <your-repo-url>
+git clone https://github.com/Prathamgupta661/Task_manager/tree/master/frontend
 cd Task_manager/frontend
 ```
 
