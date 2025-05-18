@@ -19,7 +19,7 @@ function App() {
       <Route path='/login' element={<Login setloggedIn={setloggedIn} />}/>
       <Route path='/Signup' element={<Signup/>}/>
       <Route path='/user' element={<User loggedIn={loggedIn}/>}>
-        <Route path='dashboard' element={<ProjectDashboard/>}/>
+        <Route path='dashboard' element={<ProjectDashboard setloggedIn={setloggedIn}/>}/>
         <Route path='project/:id' element={<TaskDashboard/>}/>
       </Route>
       <Route path='*' element={<h1 className='text-2xl font-bold text-center'>404 Not Found</h1>}/>

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer,toast,Bounce } from "react-toastify";
 
-const ProjectDashboard = () => {
+const ProjectDashboard = ({setloggedIn}) => {
   const [showModal, setShowModal] = useState(false);
   const [projectTitle, setProjectTitle] = useState("");
   const [projects, setprojects] = useState([]);
@@ -154,6 +154,7 @@ const ProjectDashboard = () => {
       theme: "light",
       transition: Bounce,
     });
+    setloggedIn(false)
     navigate("/login");
   }
 
